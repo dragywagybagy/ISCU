@@ -4,9 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course List with Assignments</title>
-    <style>
-        .hidden {
-            display: none;
+    <style> 
+    
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .left-section {
+            width: 50%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-section {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .top-box,
+        .bottom-box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .course-list-container {
+            margin-bottom: 20px;
         }
 
         .assignment-list {
@@ -21,76 +53,117 @@
         .course-title {
             font-weight: bold;
         }
+
+        select {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        #remove-section {
+            margin-top: 20px;
+        }
     </style>
+    <!-- This part was coded my me but simplified by chatgpt cause i overcomplicated tf outta it and didnt wanna make yall go through the pain of editing -->
 </head>
 <body>
-    <h1>Course List with Assignments</h1>
 
-    <h2>Your Course List</h2>
-    <ul id="course-list"></ul>
+    <!-- Left section-->
+    <div class="left-section">
+        <h1>Course List with Assignments</h1>
 
-    <h2>Rename a Course</h2>
-    <form id="rename-course-form">
-        <label for="select-course">Select Course to Rename:</label>
-        <select id="select-course" required></select><br><br>
+        <h2>Your Course List</h2>
+        <div class="course-list-container">
+            <ul id="course-list"></ul>
+        </div>
 
-        <label for="new-course-name">New Course Name:</label>
-        <input type="text" id="new-course-name" required><br><br>
+        <h2>Add New Course</h2>
+        <form id="add-course-form">
+            <label for="new-course-name">Enter New Course Name:</label>
+            <input type="text" id="new-course-name" required><br><br>
+            <button type="submit">Add Course</button>
+        </form>
 
-        <button type="submit">Rename Course</button>
-    </form>
+        <h2>Add Assignment to a Course</h2>
+        <form id="assignment-form">
+            <label for="assignment-name">Assignment Name:</label>
+            <input type="text" id="assignment-name" required><br><br>
 
-    <h2>Add Assignment to a Course</h2>
-    <form id="assignment-form">
-        <label for="assignment-name">Assignment Name:</label>
-        <input type="text" id="assignment-name" required><br><br>
+            <label for="due-date">Due Date:</label>
+            <input type="date" id="due-date" required><br><br>
 
-        <label for="due-date">Due Date:</label>
-        <input type="date" id="due-date" required><br><br>
+            <label for="select-course-assignment">Select Course:</label>
+            <select id="select-course-assignment" required></select><br><br>
 
-        <label for="select-course">Select Course:</label>
-        <select id="select-course-assignment" required></select><br><br>
+            <button type="submit">Add Assignment</button>
+        </form>
 
-        <button type="submit">Add Assignment</button>
-    </form>
+        <!-- Remove Section -->
+        <div id="remove-section">
+            <h2>Remove Course or Assignment</h2>
+            <label for="remove-select">Select a Course or Assignment to Remove:</label>
+            <select id="remove-select">
+                <option value="" disabled selected>Select Course or Assignment</option>
+            </select><br><br>
+
+            <button id="remove-button">Remove</button>
+        </div>
+    </div>
+
+         <!-- Right section -->
+        <div class="right-section">
+         <!-- Top box -->
+        <div class="top-box">
+        <p>Avatar</p>
+         </div>
+
+        <!-- Bottom box -->
+        <div class="bottom-box">
+        <p>Course list here</p>
+        </div>
+    </div>
 
     <script>
-        // Predefined courses with updated names
-        let courses = [
-            { courseName: "Course 1", assignments: [] },
-            { courseName: "Course 2", assignments: [] },
-            { courseName: "Course 3", assignments: [] },
-            { courseName: "Course 5", assignments: [] }
-        ];
+        // Load courses from localStorage (PAIN AND 100% NOT 30% CHATGPT GIMME A BREAK)
+        function loadCourses() {
+            const savedCourses = localStorage.getItem('userCourses');
+            return savedCourses ? JSON.parse(savedCourses) : []; // No courses yet
+        }
+
+        // Function to save courses to localStorage(YOU CAN NEVER GET ME TO LIKE YOU LOCAL STORAGE)
+        function saveCourses() {
+            localStorage.setItem('userCourses', JSON.stringify(courses));
+        }
+
+        // Load courses from localStorage
+        let courses = loadCourses();
 
         // Function to update the course list and dropdown
         function updateCourseList() {
             const courseList = document.getElementById("course-list");
-            const courseSelect = document.getElementById("select-course");
             const courseSelectAssignment = document.getElementById("select-course-assignment");
+            const removeSelect = document.getElementById("remove-select");
 
             // Clear previous content
             courseList.innerHTML = "";
-            courseSelect.innerHTML = "<option value='' disabled selected>Select Course to Rename</option>";
             courseSelectAssignment.innerHTML = "<option value='' disabled selected>Select Course</option>";
+            removeSelect.innerHTML = "<option value='' disabled selected>Select Course or Assignment</option>";
 
-            // Loop through the courses to update the UI
+            // Add courses to the list and dropdown
             courses.forEach((course, index) => {
-                // Create a list item for the course
                 const listItem = document.createElement("li");
                 listItem.classList.add("course-item");
 
                 const courseTitle = document.createElement("span");
                 courseTitle.classList.add("course-title");
-                courseTitle.textContent = `${course.courseName}`;
+                courseTitle.textContent = `${course.courseName}:`;
                 listItem.appendChild(courseTitle);
 
-                // If there are assignments, display them
+                // If there are assignments then display them
                 if (course.assignments.length > 0) {
                     const assignmentList = document.createElement("ul");
                     assignmentList.classList.add("assignment-list");
 
-                    course.assignments.forEach(assignment => {
+                    course.assignments.forEach((assignment) => {
                         const assignmentItem = document.createElement("li");
                         assignmentItem.textContent = `${assignment.assignmentName} - Due: ${assignment.dueDate}`;
                         assignmentList.appendChild(assignmentItem);
@@ -101,65 +174,95 @@
 
                 courseList.appendChild(listItem);
 
-                // Add the course to the rename dropdown
-                const courseOption = document.createElement("option");
-                courseOption.value = index;
-                courseOption.textContent = course.courseName;
-                courseSelect.appendChild(courseOption);
-
-                // Add the course to the assignment dropdown
+                // Add course to the assignment dropdown
                 const courseAssignmentOption = document.createElement("option");
                 courseAssignmentOption.value = index;
-                courseAssignmentOption.textContent = course.courseName;
+                courseAssignmentOption.textContent = `${course.courseName}`;
                 courseSelectAssignment.appendChild(courseAssignmentOption);
+
+                // Add course and assignment options to the remove dropdown
+                const courseOption = document.createElement("option");
+                courseOption.value = `course-${index}`;
+                courseOption.textContent = `Course: ${course.courseName}`;
+                removeSelect.appendChild(courseOption);
+
+                // Add assignments to the remove dropdown
+                course.assignments.forEach((assignment, assignmentIndex) => {
+                    const assignmentOption = document.createElement("option");
+                    assignmentOption.value = `assignment-${index}-${assignmentIndex}`;
+                    assignmentOption.textContent = `Assignment: ${assignment.assignmentName} - Due: ${assignment.dueDate}`;
+                    removeSelect.appendChild(assignmentOption);
+                });
             });
         }
 
-        // Event listener for renaming a course
-        document.getElementById("rename-course-form").addEventListener("submit", function(event) {
+        // remove a course
+        function removeCourse(courseIndex) {
+            courses.splice(courseIndex, 1); // Remove the course
+            saveCourses(); // Save the updated courses to localStorage
+            updateCourseList(); // Update the course list
+        }
+
+        // remove an assignment from a course
+        function removeAssignment(courseIndex, assignmentIndex) {
+            courses[courseIndex].assignments.splice(assignmentIndex, 1); // Remove the assignment
+            saveCourses(); // Save the updated courses to localStorage
+            updateCourseList(); // Update the course list
+        }
+
+        // Event listener for adding a new course
+        document.getElementById("add-course-form").addEventListener("submit", function(event) {
             event.preventDefault();
-
-            const courseIndex = document.getElementById("select-course").value;
             const newCourseName = document.getElementById("new-course-name").value.trim();
-
-            if (courseIndex !== "" && newCourseName) {
-                // Rename the course in the courses array
-                courses[courseIndex].courseName = newCourseName;
-
-                // Update the course list and dropdown
-                updateCourseList();
+            if (newCourseName) {
+                const newCourse = { courseName: newCourseName, assignments: [] };
+                courses.push(newCourse);
+                saveCourses(); // Save the updated courses
+                updateCourseList(); // Update the course list
             }
-
-            // Clear the input field after renaming
-            document.getElementById("new-course-name").value = "";
+            document.getElementById("new-course-name").value = ""; // Clear the input field
         });
 
         // Event listener for adding assignments
         document.getElementById("assignment-form").addEventListener("submit", function(event) {
             event.preventDefault();
-
             const assignmentName = document.getElementById("assignment-name").value.trim();
             const dueDate = document.getElementById("due-date").value;
             const courseIndex = document.getElementById("select-course-assignment").value;
 
             if (assignmentName && dueDate && courseIndex !== "") {
-                // Add the assignment to the selected course
                 const course = courses[courseIndex];
                 course.assignments.push({ assignmentName, dueDate });
-
-                // Update the course list to reflect the new assignment
-                updateCourseList();
-
-                // Clear the assignment input fields
+                saveCourses(); // Save the updated courses
+                updateCourseList(); // Update the course list
                 document.getElementById("assignment-name").value = "";
                 document.getElementById("due-date").value = "";
             }
         });
 
+        // Event listener for removing course or assignment
+        document.getElementById("remove-button").addEventListener("click", function() {
+            const removeSelect = document.getElementById("remove-select");
+            const selectedValue = removeSelect.value;
+
+            if (selectedValue) {
+                if (selectedValue.startsWith("course-")) {
+                    const courseIndex = parseInt(selectedValue.split("-")[1]);
+                    removeCourse(courseIndex);
+                } else if (selectedValue.startsWith("assignment-")) {
+                    const parts = selectedValue.split("-");
+                    const courseIndex = parseInt(parts[1]);
+                    const assignmentIndex = parseInt(parts[2]);
+                    removeAssignment(courseIndex, assignmentIndex);
+                }
+            }
+        });
+
         // Initial page load
         document.addEventListener("DOMContentLoaded", function() {
-            updateCourseList();  // Update the course list and dropdown
+            updateCourseList(); // Update the course list and dropdowns
         });
+        //I tried my best on this portion its not done but yeah i tried my best not to chatgpt but ended up using it for 30% of the javascript code cause this was painful :')
     </script>
 </body>
 </html>
