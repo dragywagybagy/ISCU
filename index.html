@@ -55,8 +55,8 @@
     </form>
 
     <script>
-        // Check if courses exist in localStorage, else initialize with preset courses
-        let courses = JSON.parse(localStorage.getItem("courses")) || [
+        // Predefined courses with updated names
+        let courses = [
             { courseName: "Course 1", assignments: [] },
             { courseName: "Course 2", assignments: [] },
             { courseName: "Course 3", assignments: [] },
@@ -113,9 +113,6 @@
                 courseAssignmentOption.textContent = course.courseName;
                 courseSelectAssignment.appendChild(courseAssignmentOption);
             });
-
-            // Save the updated courses to localStorage
-            localStorage.setItem("courses", JSON.stringify(courses));
         }
 
         // Event listener for renaming a course
