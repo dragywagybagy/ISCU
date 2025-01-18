@@ -3,60 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course List with Due Dates</title>
+    <title>Course List with Assignments</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        .assignment-list {
+            margin-left: 20px;
+            list-style-type: none;
+        }
+
+        .course-item {
+            margin-bottom: 15px;
+        }
+
+        .course-title {
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <h1>Course List with Due Dates</h1>
-    <form id="course-form">
-        <label for="course-name">Course Name:</label>
-        <input type="text" id="course-name" required><br><br>
-
-        <label for="due-date">Due Date:</label>
-        <input type="date" id="due-date" required><br><br>
-
-        <button type="submit">Add Course</button>
-    </form>
+    <h1>Course List with Assignments</h1>
 
     <h2>Your Course List</h2>
     <ul id="course-list"></ul>
 
-    <script>
-        // Check if there are any saved courses in local storage
-        document.addEventListener("DOMContentLoaded", function() {
-            const savedCourses = JSON.parse(localStorage.getItem("courses")) || [];
-            displayCourses(savedCourses);
-        });
+    <h2>Rename a Course</h2>
+    <form id="rename-course-form">
+        <label for="select-course">Select Course to Rename:</label>
+        <select id="select-course" required></select><br><br>
 
-        // Add course and due date to the list and save it in local storage
-        document.getElementById("course-form").addEventListener("submit", function(event) {
+        <label for="new-course-name">New Course Name:</label>
+        <input type="text" id="new-course-name" required><br><br>
+
+        <button type="submit">Rename Course</button>
+    </form>
+
+    <h2>Add Assignment to a Course</h2>
+    <form id="assignment-form">
+        <label for="assignment-name">Assignment Name:</label>
+        <input type="text" id="assignment-name" required><br><br>
+
+        <label for="due-date">Due Date:</label>
+        <input type="date" id="due-date" required><br><br>
+
+        <label for="select-course">Select Course:</label>
+        <select id="select-course-assignment" required></select><br><br>
+
+        <button type="submit">Add Assignment</button>
+    </form>
+
+    <script>
+        // Check if courses exist in localStorage, else initialize with preset courses
+        let courses = JSON.parse(localStorage.getItem("courses")) || [
+            { courseName: "Course 1", assignments: [] },
+            { courseName: "Course 2", assignments: [] },
+            { courseName: "Course 3", assignments: [] },
+            { courseName: "Course 5", assignments: [] }
+        ];
+
+        // Function to update the course list and dropdown
+        function updateCourseList() {
+            const courseList = document.getElementById("course-list");
+            const courseSelect = document.getElementById("select-course");
+            const courseSelectAssignment = document.getElementById("select-course-assignment");
+
+            // Clear previous content
+            courseList.innerHTML = "";
+            courseSelect.innerHTML = "<option value='' disabled selected>Select Course to Rename</option>";
+            courseSelectAssignment.innerHTML = "<option value='' disabled selected>Select Course</option>";
+
+            // Loop through the courses to update the UI
+            courses.forEach((course, index) => {
+                // Create a list item for the course
+                const listItem = document.createElement("li");
+                listItem.classList.add("course-item");
+
+                const courseTitle = document.createElement("span");
+                courseTitle.classList.add("course-title");
+                courseTitle.textContent = `${course.courseName}`;
+                listItem.appendChild(courseTitle);
+
+                // If there are assignments, display them
+                if (course.assignments.length > 0) {
+                    const assignmentList = document.createElement("ul");
+                    assignmentList.classList.add("assignment-list");
+
+                    course.assignments.forEach(assignment => {
+                        const assignmentItem = document.createElement("li");
+                        assignmentItem.textContent = `${assignment.assignmentName} - Due: ${assignment.dueDate}`;
+                        assignmentList.appendChild(assignmentItem);
+                    });
+
+                    listItem.appendChild(assignmentList);
+                }
+
+                courseList.appendChild(listItem);
+
+                // Add the course to the rename dropdown
+                const courseOption = document.createElement("option");
+                courseOption.value = index;
+                courseOption.textContent = course.courseName;
+                courseSelect.appendChild(courseOption);
+
+                // Add the course to the assignment dropdown
+                const courseAssignmentOption = document.createElement("option");
+                courseAssignmentOption.value = index;
+                courseAssignmentOption.textContent = course.courseName;
+                courseSelectAssignment.appendChild(courseAssignmentOption);
+            });
+
+            // Save the updated courses to localStorage
+            localStorage.setItem("courses", JSON.stringify(courses));
+        }
+
+        // Event listener for renaming a course
+        document.getElementById("rename-course-form").addEventListener("submit", function(event) {
             event.preventDefault();
 
-            const courseName = document.getElementById("course-name").value;
+            const courseIndex = document.getElementById("select-course").value;
+            const newCourseName = document.getElementById("new-course-name").value.trim();
+
+            if (courseIndex !== "" && newCourseName) {
+                // Rename the course in the courses array
+                courses[courseIndex].courseName = newCourseName;
+
+                // Update the course list and dropdown
+                updateCourseList();
+            }
+
+            // Clear the input field after renaming
+            document.getElementById("new-course-name").value = "";
+        });
+
+        // Event listener for adding assignments
+        document.getElementById("assignment-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const assignmentName = document.getElementById("assignment-name").value.trim();
             const dueDate = document.getElementById("due-date").value;
+            const courseIndex = document.getElementById("select-course-assignment").value;
 
-            if (courseName && dueDate) {
-                const savedCourses = JSON.parse(localStorage.getItem("courses")) || [];
-                savedCourses.push({ courseName, dueDate });
+            if (assignmentName && dueDate && courseIndex !== "") {
+                // Add the assignment to the selected course
+                const course = courses[courseIndex];
+                course.assignments.push({ assignmentName, dueDate });
 
-                localStorage.setItem("courses", JSON.stringify(savedCourses));
-                displayCourses(savedCourses);
+                // Update the course list to reflect the new assignment
+                updateCourseList();
 
-                // Clear the input fields
-                document.getElementById("course-name").value = "";
+                // Clear the assignment input fields
+                document.getElementById("assignment-name").value = "";
                 document.getElementById("due-date").value = "";
             }
         });
 
-        // Function to display courses on the page
-        function displayCourses(courses) {
-            const courseList = document.getElementById("course-list");
-            courseList.innerHTML = ""; // Clear the list first
-            courses.forEach(function(course) {
-                const listItem = document.createElement("li");
-                listItem.textContent = `${course.courseName} - Due: ${course.dueDate}`;
-                courseList.appendChild(listItem);
-            });
-        }
+        // Initial page load
+        document.addEventListener("DOMContentLoaded", function() {
+            updateCourseList();  // Update the course list and dropdown
+        });
     </script>
 </body>
 </html>
