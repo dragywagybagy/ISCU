@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course List with Assignments</title>
-    <style> 
-    
+    <style> /* So much trial and error this hurts */
         * {
             box-sizing: border-box;
         }
@@ -14,8 +13,10 @@
             display: flex;
             min-height: 100vh;
             margin: 0;
+            flex-direction: row-reverse;
         }
 
+        /* Left section - where the course list and forms will be */
         .left-section {
             width: 50%;
             padding: 20px;
@@ -23,6 +24,7 @@
             flex-direction: column;
         }
 
+        /* Right section - where the avatar and other info might go */
         .right-section {
             width: 50%;
             display: flex;
@@ -30,10 +32,11 @@
             padding: 20px;
         }
 
+        /* Box for holding content */
         .top-box,
         .bottom-box {
             border: 1px solid #ccc;
-            padding: 15px;
+            padding: 180px;
             margin-bottom: 10px;
         }
 
@@ -46,6 +49,7 @@
             list-style-type: none;
         }
 
+        /* Each course item will look like this */
         .course-item {
             margin-bottom: 15px;
         }
@@ -63,19 +67,20 @@
             margin-top: 20px;
         }
     </style>
-    <!-- This part was coded my me but simplified by chatgpt cause i overcomplicated tf outta it and didnt wanna make yall go through the pain of editing -->
 </head>
 <body>
 
-    <!-- Left section-->
+    <!-- Left section for adding courses and assignments -->
     <div class="left-section">
         <h1>Course List with Assignments</h1>
 
+        <!-- Section to show all courses -->
         <h2>Your Course List</h2>
         <div class="course-list-container">
             <ul id="course-list"></ul>
         </div>
 
+        <!-- Form to add a new course -->
         <h2>Add New Course</h2>
         <form id="add-course-form">
             <label for="new-course-name">Enter New Course Name:</label>
@@ -83,6 +88,7 @@
             <button type="submit">Add Course</button>
         </form>
 
+        <!-- Form to add an assignment to a course -->
         <h2>Add Assignment to a Course</h2>
         <form id="assignment-form">
             <label for="assignment-name">Assignment Name:</label>
@@ -97,7 +103,7 @@
             <button type="submit">Add Assignment</button>
         </form>
 
-        <!-- Remove Section -->
+        <!-- Section for removing courses or assignments -->
         <div id="remove-section">
             <h2>Remove Course or Assignment</h2>
             <label for="remove-select">Select a Course or Assignment to Remove:</label>
@@ -109,56 +115,56 @@
         </div>
     </div>
 
-         <!-- Right section -->
-        <div class="right-section">
-         <!-- Top box -->
+    <!-- Right section for some additional information -->
+    <div class="right-section">
+        <!-- Placeholder box for an avatar -->
         <div class="top-box">
-        <p>Avatar</p>
-         </div>
+            <p>Avatar</p>
+        </div>
 
-        <!-- Bottom box -->
+        <!-- Placeholder box for the course list info -->
         <div class="bottom-box">
-        <p>Course list here</p>
+            <p>Course list here</p>
         </div>
     </div>
 
-    <script>
-        // Load courses from localStorage (PAIN AND 100% NOT 30% CHATGPT GIMME A BREAK)
+    <script> //I tried my best on this but it ended up being like 30% chatgpt gimme a break :')
+        // load the courses stored in localStorage
         function loadCourses() {
             const savedCourses = localStorage.getItem('userCourses');
-            return savedCourses ? JSON.parse(savedCourses) : []; // No courses yet
+            // If we have courses saved, return them as an array
+            return savedCourses ? JSON.parse(savedCourses) : []; 
         }
 
-        // Function to save courses to localStorage(YOU CAN NEVER GET ME TO LIKE YOU LOCAL STORAGE)
+        // save the current list of courses to localStorage (I HATED THIS)
         function saveCourses() {
             localStorage.setItem('userCourses', JSON.stringify(courses));
         }
 
-        // Load courses from localStorage
+        // load course from localStorage
         let courses = loadCourses();
 
-        // Function to update the course list and dropdown
+        // update the course list displayed on the page
         function updateCourseList() {
             const courseList = document.getElementById("course-list");
             const courseSelectAssignment = document.getElementById("select-course-assignment");
             const removeSelect = document.getElementById("remove-select");
 
-            // Clear previous content
             courseList.innerHTML = "";
             courseSelectAssignment.innerHTML = "<option value='' disabled selected>Select Course</option>";
             removeSelect.innerHTML = "<option value='' disabled selected>Select Course or Assignment</option>";
 
-            // Add courses to the list and dropdown
             courses.forEach((course, index) => {
                 const listItem = document.createElement("li");
                 listItem.classList.add("course-item");
 
+                // Display the course name as the title
                 const courseTitle = document.createElement("span");
                 courseTitle.classList.add("course-title");
                 courseTitle.textContent = `${course.courseName}:`;
                 listItem.appendChild(courseTitle);
 
-                // If there are assignments then display them
+                // Display assignment below the course name
                 if (course.assignments.length > 0) {
                     const assignmentList = document.createElement("ul");
                     assignmentList.classList.add("assignment-list");
@@ -174,19 +180,19 @@
 
                 courseList.appendChild(listItem);
 
-                // Add course to the assignment dropdown
+                // Add this course to the assignment dropdown
                 const courseAssignmentOption = document.createElement("option");
                 courseAssignmentOption.value = index;
                 courseAssignmentOption.textContent = `${course.courseName}`;
                 courseSelectAssignment.appendChild(courseAssignmentOption);
 
-                // Add course and assignment options to the remove dropdown
+                // Add this course to the remove dropdown
                 const courseOption = document.createElement("option");
                 courseOption.value = `course-${index}`;
                 courseOption.textContent = `Course: ${course.courseName}`;
                 removeSelect.appendChild(courseOption);
 
-                // Add assignments to the remove dropdown
+                // Add each assignment to the remove dropdown
                 course.assignments.forEach((assignment, assignmentIndex) => {
                     const assignmentOption = document.createElement("option");
                     assignmentOption.value = `assignment-${index}-${assignmentIndex}`;
@@ -196,55 +202,63 @@
             });
         }
 
-        // remove a course
+        // remove a course from the list
         function removeCourse(courseIndex) {
-            courses.splice(courseIndex, 1); // Remove the course
-            saveCourses(); // Save the updated courses to localStorage
-            updateCourseList(); // Update the course list
+            courses.splice(courseIndex, 1); // Remove the course from the array
+            saveCourses(); // Save the updated list to localStorage
+            updateCourseList(); // Update the displayed list
         }
 
         // remove an assignment from a course
         function removeAssignment(courseIndex, assignmentIndex) {
-            courses[courseIndex].assignments.splice(assignmentIndex, 1); // Remove the assignment
-            saveCourses(); // Save the updated courses to localStorage
-            updateCourseList(); // Update the course list
+            courses[courseIndex].assignments.splice(assignmentIndex, 1); // Remove the assignment from the course
+            saveCourses(); 
+            updateCourseList(); 
         }
 
         // Event listener for adding a new course
         document.getElementById("add-course-form").addEventListener("submit", function(event) {
-            event.preventDefault();
+            event.preventDefault(); 
             const newCourseName = document.getElementById("new-course-name").value.trim();
+
+            // create a new course object and add it to the courses array
             if (newCourseName) {
                 const newCourse = { courseName: newCourseName, assignments: [] };
                 courses.push(newCourse);
-                saveCourses(); // Save the updated courses
-                updateCourseList(); // Update the course list
+                saveCourses(); 
+                updateCourseList(); 
             }
-            document.getElementById("new-course-name").value = ""; // Clear the input field
+
+            // Clear the input field after submitting the form
+            document.getElementById("new-course-name").value = ""; 
         });
 
-        // Event listener for adding assignments
+        // adding an assignment to a course
         document.getElementById("assignment-form").addEventListener("submit", function(event) {
-            event.preventDefault();
+            event.preventDefault(); 
             const assignmentName = document.getElementById("assignment-name").value.trim();
             const dueDate = document.getElementById("due-date").value;
             const courseIndex = document.getElementById("select-course-assignment").value;
 
+            // Add the new assignment to the selected course
             if (assignmentName && dueDate && courseIndex !== "") {
                 const course = courses[courseIndex];
                 course.assignments.push({ assignmentName, dueDate });
-                saveCourses(); // Save the updated courses
-                updateCourseList(); // Update the course list
+                saveCourses(); 
+                updateCourseList(); 
+
+                // Clear the form fields after submission
                 document.getElementById("assignment-name").value = "";
                 document.getElementById("due-date").value = "";
             }
         });
 
-        // Event listener for removing course or assignment
+        // removing a course or assignment
         document.getElementById("remove-button").addEventListener("click", function() {
             const removeSelect = document.getElementById("remove-select");
             const selectedValue = removeSelect.value;
 
+            
             if (selectedValue) {
                 if (selectedValue.startsWith("course-")) {
                     const courseIndex = parseInt(selectedValue.split("-")[1]);
@@ -258,11 +272,10 @@
             }
         });
 
-        // Initial page load
+        // When the page loads update the course list
         document.addEventListener("DOMContentLoaded", function() {
-            updateCourseList(); // Update the course list and dropdowns
+            updateCourseList(); 
         });
-        //I tried my best on this portion its not done but yeah i tried my best not to chatgpt but ended up using it for 30% of the javascript code cause this was painful :')
     </script>
 </body>
 </html>
