@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Save Word to Local Storage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Save a Word</h1>
+    <input type="text" id="wordInput" placeholder="Type a word...">
+    <button id="saveButton">Save</button>
+    <p id="savedWord">Saved Word: <span id="wordDisplay">None</span></p>
+
+    <script>
+        const inputField = document.getElementById('wordInput');
+        const saveButton = document.getElementById('saveButton');
+        const wordDisplay = document.getElementById('wordDisplay');
+
+        // Load the saved word from local storage when the page loads
+        window.onload = () => {
+            const savedWord = localStorage.getItem('savedWord');
+            if (savedWord) {
+                wordDisplay.textContent = savedWord;
+            }
+        };
+
+        // Save the word to local storage when the button is clicked
+        saveButton.addEventListener('click', () => {
+            const word = inputField.value;
+            if (word.trim() !== '') {
+                localStorage.setItem('savedWord', word);
+                wordDisplay.textContent = word;
+                inputField.value = '';
+            } else {
+                alert('Please enter a valid word.');
+            }
+        });
+    </script>
+</body>
+</html>
