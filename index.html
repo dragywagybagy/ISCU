@@ -1,150 +1,208 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course List with Assignments</title>
-    <style> /* So much trial and error this hurts */
+    <style>
+        /* Basic style reset and body setup (This used to be way more complicated for no reason ) */
         * {
             box-sizing: border-box;
         }
 
         body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
             display: flex;
+            flex-direction: row-reverse;
             min-height: 100vh;
             margin: 0;
-            flex-direction: row-reverse;
         }
 
-        /* Left section - where the course list and forms will be */
+        /* Heading styles */
+        h1 {
+            font-size: 12px;
+        }
+        h2 {
+            font-size: 12px;
+        }
+        p {
+            font-size: 12px;
+        }
+
+        /* Sections layout */
         .left-section {
-            width: 50%;
+            width: 60%;
             padding: 20px;
             display: flex;
             flex-direction: column;
         }
 
-        /* Right section - where the avatar and other info might go */
         .right-section {
-            width: 50%;
+            width: 40%;
             display: flex;
             flex-direction: column;
             padding: 20px;
         }
 
-        /* Box for holding content */
-        .top-box,
-        .bottom-box {
+        /* Box styling for top and bottom */
+        .top-box, .bottom-box {
             border: 1px solid #ccc;
-            padding: 180px;
-            margin-bottom: 10px;
+            margin: 5px;
+            height: 425px;
         }
 
-        .course-list-container {
-            margin-bottom: 20px;
+        /* Scroll box styles */
+        .scroll-box {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
         }
 
-        .assignment-list {
-            margin-left: 20px;
-            list-style-type: none;
+        .scroll-content {
+            display: flex;
+            transition: transform 0.3s ease;
         }
 
-        /* Each course item will look like this */
-        .course-item {
-            margin-bottom: 15px;
+        .scroll-page {
+            flex: 0 0 100%;
+            height: 100%;
         }
 
-        .course-title {
-            font-weight: bold;
+        .scroll-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #ccc;
+            border: 1px solid #aaa;
+            padding: 5px;
+            cursor: pointer;
+            z-index: 10;
         }
 
-        select {
-            margin-top: 10px;
-            margin-bottom: 10px;
+        .scroll-button.left {
+            left: 0;
         }
 
-        #remove-section {
-            margin-top: 20px;
+        .scroll-button.right {
+            right: 0;
         }
     </style>
 </head>
 <body>
 
-    <!-- Left section for adding courses and assignments -->
     <div class="left-section">
-        <h1>Course List with Assignments</h1>
-
-        <!-- Section to show all courses -->
-        <h2>Your Course List</h2>
-        <div class="course-list-container">
-            <ul id="course-list"></ul>
-        </div>
-
-        <!-- Form to add a new course -->
-        <h2>Add New Course</h2>
-        <form id="add-course-form">
-            <label for="new-course-name">Enter New Course Name:</label>
-            <input type="text" id="new-course-name" required><br><br>
-            <button type="submit">Add Course</button>
-        </form>
-
-        <!-- Form to add an assignment to a course -->
-        <h2>Add Assignment to a Course</h2>
-        <form id="assignment-form">
-            <label for="assignment-name">Assignment Name:</label>
-            <input type="text" id="assignment-name" required><br><br>
-
-            <label for="due-date">Due Date:</label>
-            <input type="date" id="due-date" required><br><br>
-
-            <label for="select-course-assignment">Select Course:</label>
-            <select id="select-course-assignment" required></select><br><br>
-
-            <button type="submit">Add Assignment</button>
-        </form>
-
-        <!-- Section for removing courses or assignments -->
-        <div id="remove-section">
-            <h2>Remove Course or Assignment</h2>
-            <label for="remove-select">Select a Course or Assignment to Remove:</label>
-            <select id="remove-select">
-                <option value="" disabled selected>Select Course or Assignment</option>
-            </select><br><br>
-
-            <button id="remove-button">Remove</button>
-        </div>
+        <!-- Empty section for spacing -->
     </div>
 
-    <!-- Right section for some additional information -->
     <div class="right-section">
-        <!-- Placeholder box for an avatar -->
         <div class="top-box">
-            <p>Avatar</p>
+            <p>Avatar</p> <!-- Placeholder for Avatar -->
         </div>
 
-        <!-- Placeholder box for the course list info -->
         <div class="bottom-box">
-            <p>Course list here</p>
+            <h1>Course List with Assignments</h1>
+            <div class="scroll-box">
+                <button class="scroll-button left" onclick="scrollBox(-1)">&lt;</button>
+                <div class="scroll-content" id="scroll-content">
+                    <!-- First page - list of courses -->
+                    <div class="scroll-page">
+                        <h2>Your Course List</h2>
+                        <ul id="course-list"></ul>
+                    </div>
+                    <!-- Second page - form to add course or assignments -->
+                    <div class="scroll-page">
+                        <h2>Add New Course</h2>
+                        <form id="add-course-form">
+                            <label for="new-course-name">Course Name:</label>
+                            <input type="text" id="new-course-name" required><br><br>
+                            <button type="submit">Add Course</button>
+                        </form>
+
+                        <h2>Add Assignment</h2>
+                        <form id="assignment-form">
+                            <label for="assignment-name">Assignment Name:</label>
+                            <input type="text" id="assignment-name" required><br><br>
+
+                            <label for="due-date">Due Date:</label>
+                            <input type="date" id="due-date" required><br><br>
+
+                            <label for="select-course-assignment">Select Course:</label>
+                            <select id="select-course-assignment" required></select><br><br>
+
+                            <label for="assignment-weight">Weight (0-100%):</label>
+                            <input type="text" id="assignment-weight"><br><br>
+
+                            <button type="submit">Add Assignment</button>
+                        </form>
+
+                        <!-- Remove Course or Assignment Section -->
+                        <div id="remove-section">
+                            <h2>Remove Course or Assignment</h2>
+                            <label for="remove-select">Select to Remove:</label>
+                            <select id="remove-select">
+                                <option value="" disabled selected>Select Course or Assignment</option>
+                            </select><br><br>
+                            <button id="remove-button">Remove</button>
+                        </div>
+                    </div>
+                </div>
+                <button class="scroll-button right" onclick="scrollBox(1)">&gt;</button>
+            </div>
         </div>
     </div>
 
-    <script> //I tried my best on this but it ended up being like 30% chatgpt gimme a break :')
-        // load the courses stored in localStorage
-        function loadCourses() {
-            const savedCourses = localStorage.getItem('userCourses');
-            // If we have courses saved, return them as an array
-            return savedCourses ? JSON.parse(savedCourses) : []; 
+    <script> //i tried here but ima be honest like 30% of this is probably indirectly chatgpt :')
+        let currentPage = 0; // keeps track of which page we're on
+
+        // Function to scroll pages left or right
+        function scrollBox(direction) {
+            const scrollContent = document.getElementById("scroll-content");
+            const totalPages = scrollContent.children.length;
+
+            currentPage += direction; // change page number
+
+            if (currentPage < 0) currentPage = 0; // can't go before first page
+            if (currentPage >= totalPages) currentPage = totalPages - 1; // can't go after last page
+
+            scrollContent.style.transform = `translateX(-${currentPage * 100}%)`; // move to the correct page
         }
 
-        // save the current list of courses to localStorage (I HATED THIS)
+        // Load saved courses or start fresh
+        function loadCourses() {
+            const savedCourses = localStorage.getItem('userCourses');
+            return savedCourses ? JSON.parse(savedCourses) : [];
+        }
+
+        // Save courses to local storage
         function saveCourses() {
             localStorage.setItem('userCourses', JSON.stringify(courses));
         }
 
-        // load course from localStorage
-        let courses = loadCourses();
+        let courses = loadCourses(); 
 
-        // update the course list displayed on the page
+        // This calculates the priority based on the due date and weight
+        function calculatePriority(assignment, allAssignments) {
+            const dueDate = new Date(assignment.dueDate);
+            const weight = assignment.weight === "NA" ? 0 : parseFloat(assignment.weight);
+            const currentDate = new Date();
+
+            let dueDatePriority = 0;
+            allAssignments.forEach((otherAssignment) => {
+                const otherDueDate = new Date(otherAssignment.dueDate);
+                if (otherDueDate < dueDate) dueDatePriority++; // earlier due dates are higher priority
+            });
+
+            let weightPriority = 0;
+            allAssignments.forEach((otherAssignment) => {
+                const otherWeight = otherAssignment.weight === "NA" ? 0 : parseFloat(otherAssignment.weight);
+                if (otherWeight < weight) weightPriority++; // heavier assignments are higher priority
+            });
+
+            return (dueDatePriority + weightPriority) / 2; // return average priority
+        }
+
+        // Update the course list and assignment data (Idk whats going here ima be honest it was mostly my friend and gpt :'))
         function updateCourseList() {
             const courseList = document.getElementById("course-list");
             const courseSelectAssignment = document.getElementById("select-course-assignment");
@@ -154,128 +212,136 @@
             courseSelectAssignment.innerHTML = "<option value='' disabled selected>Select Course</option>";
             removeSelect.innerHTML = "<option value='' disabled selected>Select Course or Assignment</option>";
 
-            courses.forEach((course, index) => {
-                const listItem = document.createElement("li");
-                listItem.classList.add("course-item");
+            let allAssignments = [];
+            courses.forEach((course, courseIndex) => {
+                course.assignments.forEach((assignment) => {
+                    allAssignments.push({
+                        courseIndex: courseIndex,
+                        assignmentName: assignment.assignmentName,
+                        dueDate: assignment.dueDate,
+                        weight: assignment.weight
+                    });
+                });
+            });
 
-                // Display the course name as the title
+            allAssignments.forEach((assignment, index) => {
+                assignment.priorityScore = calculatePriority(assignment, allAssignments); // calculate each assignment's priority
+            });
+
+            const totalPriority = allAssignments.reduce((sum, assignment) => sum + assignment.priorityScore, 0);
+
+            allAssignments.forEach((assignment) => {
+                assignment.priorityPercentage = (assignment.priorityScore / totalPriority) * 100;
+            });
+
+            courses.forEach((course, courseIndex) => {
+                const courseItem = document.createElement("li");
+                courseItem.classList.add("course-item");
+
                 const courseTitle = document.createElement("span");
                 courseTitle.classList.add("course-title");
                 courseTitle.textContent = `${course.courseName}:`;
-                listItem.appendChild(courseTitle);
+                courseItem.appendChild(courseTitle);
 
-                // Display assignment below the course name
-                if (course.assignments.length > 0) {
-                    const assignmentList = document.createElement("ul");
-                    assignmentList.classList.add("assignment-list");
+                const assignmentList = document.createElement("ul");
+                assignmentList.classList.add("assignment-list");
 
-                    course.assignments.forEach((assignment) => {
-                        const assignmentItem = document.createElement("li");
-                        assignmentItem.textContent = `${assignment.assignmentName} - Due: ${assignment.dueDate}`;
-                        assignmentList.appendChild(assignmentItem);
-                    });
+                course.assignments.forEach((assignment) => {
+                    const assignmentItem = document.createElement("li");
+                    const assignmentPriority = allAssignments.find(a => a.courseIndex === courseIndex && a.assignmentName === assignment.assignmentName).priorityPercentage;
+                    assignmentItem.textContent = `${assignment.assignmentName} - Due: ${assignment.dueDate} - Priority: ${Math.round(assignmentPriority)}%`;
+                    assignmentList.appendChild(assignmentItem);
+                });
 
-                    listItem.appendChild(assignmentList);
-                }
+                courseItem.appendChild(assignmentList);
+                courseList.appendChild(courseItem);
 
-                courseList.appendChild(listItem);
-
-                // Add this course to the assignment dropdown
                 const courseAssignmentOption = document.createElement("option");
-                courseAssignmentOption.value = index;
+                courseAssignmentOption.value = courseIndex;
                 courseAssignmentOption.textContent = `${course.courseName}`;
                 courseSelectAssignment.appendChild(courseAssignmentOption);
 
-                // Add this course to the remove dropdown
                 const courseOption = document.createElement("option");
-                courseOption.value = `course-${index}`;
+                courseOption.value = `course-${courseIndex}`;
                 courseOption.textContent = `Course: ${course.courseName}`;
                 removeSelect.appendChild(courseOption);
 
-                // Add each assignment to the remove dropdown
                 course.assignments.forEach((assignment, assignmentIndex) => {
                     const assignmentOption = document.createElement("option");
-                    assignmentOption.value = `assignment-${index}-${assignmentIndex}`;
-                    assignmentOption.textContent = `Assignment: ${assignment.assignmentName} - Due: ${assignment.dueDate}`;
+                    assignmentOption.value = `assignment-${courseIndex}-${assignmentIndex}`;
+                    assignmentOption.textContent = `Assignment: ${assignment.assignmentName}`;
                     removeSelect.appendChild(assignmentOption);
                 });
             });
         }
 
-        // remove a course from the list
-        function removeCourse(courseIndex) {
-            courses.splice(courseIndex, 1); // Remove the course from the array
-            saveCourses(); // Save the updated list to localStorage
-            updateCourseList(); // Update the displayed list
+        // Add a new course
+        function addCourse(courseName) {
+            const newCourse = {
+                courseName: courseName,
+                assignments: []
+            };
+
+            courses.push(newCourse);
+            saveCourses();
+            updateCourseList();
         }
 
-        // remove an assignment from a course
-        function removeAssignment(courseIndex, assignmentIndex) {
-            courses[courseIndex].assignments.splice(assignmentIndex, 1); // Remove the assignment from the course
-            saveCourses(); 
-            updateCourseList(); 
+        // Add a new assignment to a course
+        function addAssignment(courseIndex, assignmentName, dueDate, weight) {
+            const newAssignment = {
+                assignmentName: assignmentName,
+                dueDate: dueDate,
+                weight: weight
+            };
+
+            courses[courseIndex].assignments.push(newAssignment);
+            saveCourses();
+            updateCourseList();
         }
 
-        // Event listener for adding a new course
-        document.getElementById("add-course-form").addEventListener("submit", function(event) {
-            event.preventDefault(); 
-            const newCourseName = document.getElementById("new-course-name").value.trim();
-
-            // create a new course object and add it to the courses array
-            if (newCourseName) {
-                const newCourse = { courseName: newCourseName, assignments: [] };
-                courses.push(newCourse);
-                saveCourses(); 
-                updateCourseList(); 
+        // Remove a course or assignment (IM SO PROUD OF THIS)
+        function removeCourseOrAssignment(value) {
+            const [type, index] = value.split("-");
+            if (type === "course") {
+                courses.splice(index, 1); // remove course
+            } else if (type === "assignment") {
+                const [courseIndex, assignmentIndex] = index.split("-").map(Number);
+                courses[courseIndex].assignments.splice(assignmentIndex, 1); // remove assignment
             }
+            saveCourses();
+            updateCourseList();
+        }
 
-            // Clear the input field after submitting the form
-            document.getElementById("new-course-name").value = ""; 
+        // Event listeners for forms and button clicks
+        document.getElementById("add-course-form").addEventListener("submit", (event) => {
+            event.preventDefault();
+            const newCourseName = document.getElementById("new-course-name").value;
+            addCourse(newCourseName);
+            document.getElementById("new-course-name").value = ""; // clear input field
         });
 
-        // adding an assignment to a course
-        document.getElementById("assignment-form").addEventListener("submit", function(event) {
-            event.preventDefault(); 
-            const assignmentName = document.getElementById("assignment-name").value.trim();
+        document.getElementById("assignment-form").addEventListener("submit", (event) => {
+            event.preventDefault();
+            const assignmentName = document.getElementById("assignment-name").value;
             const dueDate = document.getElementById("due-date").value;
             const courseIndex = document.getElementById("select-course-assignment").value;
+            const weight = document.getElementById("assignment-weight").value;
+            addAssignment(courseIndex, assignmentName, dueDate, weight);
+            document.getElementById("assignment-name").value = "";
+            document.getElementById("due-date").value = "";
+            document.getElementById("assignment-weight").value = "";
+        });
 
-            // Add the new assignment to the selected course
-            if (assignmentName && dueDate && courseIndex !== "") {
-                const course = courses[courseIndex];
-                course.assignments.push({ assignmentName, dueDate });
-                saveCourses(); 
-                updateCourseList(); 
-
-                // Clear the form fields after submission
-                document.getElementById("assignment-name").value = "";
-                document.getElementById("due-date").value = "";
+        document.getElementById("remove-button").addEventListener("click", () => {
+            const value = document.getElementById("remove-select").value;
+            if (value) {
+                removeCourseOrAssignment(value); // remove selected course or assignment
             }
         });
 
-        // removing a course or assignment
-        document.getElementById("remove-button").addEventListener("click", function() {
-            const removeSelect = document.getElementById("remove-select");
-            const selectedValue = removeSelect.value;
-
-            
-            if (selectedValue) {
-                if (selectedValue.startsWith("course-")) {
-                    const courseIndex = parseInt(selectedValue.split("-")[1]);
-                    removeCourse(courseIndex);
-                } else if (selectedValue.startsWith("assignment-")) {
-                    const parts = selectedValue.split("-");
-                    const courseIndex = parseInt(parts[1]);
-                    const assignmentIndex = parseInt(parts[2]);
-                    removeAssignment(courseIndex, assignmentIndex);
-                }
-            }
-        });
-
-        // When the page loads update the course list
-        document.addEventListener("DOMContentLoaded", function() {
-            updateCourseList(); 
-        });
+        updateCourseList(); // initialize the course list
     </script>
+
 </body>
 </html>
