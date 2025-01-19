@@ -1,5 +1,6 @@
 {
   "name": "Tidy Task",
+  "description": "Work Optimization Toolkit",
   "version": "1.0",
   "manifest_version": 3,
   "icons": {
@@ -10,10 +11,10 @@
     "type": "module"
   },
   "action": {
-    "default_popup": "extension.html"
+    "default_popup": "popup.html"
   },
   "permissions": [
-    "scripting"
+    "storage"
   ],
   "host_permissions": [
     "http://*/*",
