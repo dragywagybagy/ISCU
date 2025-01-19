@@ -17,6 +17,8 @@
             flex-direction: row-reverse;
             min-height: 100vh;
             margin: 0;
+            background: url('https://cdn.discordapp.com/attachments/1322777199735996447/1330321554957008896/IMG_0236.gif?ex=678e36be&is=678ce53e&hm=cb33793664821faeb0067fb146c306dc51c9b2eb1c93278287ee40a60bacf70b') no-repeat center center fixed;
+            background-size: cover;
         }
 
         /* Heading styles */
@@ -46,7 +48,62 @@
         }
 
         /* Box styling for top and bottom */
-        .top-box, .bottom-box {
+        .top-box {
+            border: 1px solid #ccc;
+    margin: 5px;
+    height: 425px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative; 
+        }
+
+        .overlay-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.overlay-toggle-container {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 10;
+}
+
+#toggle-overlay-btn {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.background-gif {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+}
+
+.overlay-image {
+    position: absolute;
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    width: 50%; 
+    height: auto; 
+    z-index: 2; 
+    pointer-events: none; 
+}
+
+        .top-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+        }
+
+        .bottom-box {
             border: 1px solid #ccc;
             margin: 5px;
             height: 425px;
@@ -97,7 +154,20 @@
 
     <div class="right-section">
         <div class="top-box">
-            <p>Avatar</p> <!-- Placeholder for Avatar -->
+            <div class="overlay-container">
+                <img 
+                    src="https://cdn.discordapp.com/attachments/1322777199735996447/1330367458137079848/ScreenRecording_01-18-202521-42-07_1-ezgif.com-video-to-gif-converter.gif?ex=678e617f&is=678d0fff&hm=fb3297e6ede5e5b8e858acf6ad2c86b65a3126db1035305534a5f13e8502e66a&" 
+                    alt="Background GIF" 
+                    class="background-gif">
+                <img 
+                    src="https://cdn.discordapp.com/attachments/1322777199735996447/1330570397082718260/IMG_0245.png?ex=678e75bf&is=678d243f&hm=0de98b6c3a892acb3348519d6d7fd0084c82524d917394bb6dfedbe92e73d7ae&" 
+                    alt="New Overlay Image" 
+                    class="overlay-image">
+                <!-- Move the button into the top-box -->
+                <div class="overlay-toggle-container">
+                    <button id="toggle-overlay-btn">Switch Avatar</button>
+                </div>
+            </div>
         </div>
 
         <div class="bottom-box">
@@ -152,7 +222,26 @@
         </div>
     </div>
 
-    <script> //i tried here but ima be honest like 30% of this is probably indirectly chatgpt (why is this being said 💀):')
+    <script> //i tried here but ima be honest like 30% of this is probably indirectly chatgpt :')
+        let isOverlayImage1Visible = true; // Tracks which overlay image is visible
+
+// Function to toggle overlay images
+function toggleOverlayImage() {
+    const overlayImage = document.querySelector('.overlay-image');
+
+    if (isOverlayImage1Visible) {
+        overlayImage.src = 'https://cdn.discordapp.com/attachments/1322777199735996447/1330570397594161162/IMG_0246.png?ex=678e75bf&is=678d243f&hm=8af527ce025bdfcbd8d7cd39e029a5655478cb224efbc8ddd72955aef8a4308d&'; // Replace with your second image path
+    } else {
+        overlayImage.src = 'https://cdn.discordapp.com/attachments/1322777199735996447/1330570397082718260/IMG_0245.png?ex=678e75bf&is=678d243f&hm=0de98b6c3a892acb3348519d6d7fd0084c82524d917394bb6dfedbe92e73d7ae&'; // First overlay image
+    }
+
+    isOverlayImage1Visible = !isOverlayImage1Visible; // Toggle the state
+}
+
+// Attach the toggle function to the button click event
+document.getElementById('toggle-overlay-btn').addEventListener('click', toggleOverlayImage);
+
+
         let currentPage = 0; // keeps track of which page we're on
 
         // Function to scroll pages left or right
