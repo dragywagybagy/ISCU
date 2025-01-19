@@ -11,8 +11,6 @@
     "type" : "module"
   },
   "action": {
-    "default_popup": "hello.html",
-    "default_icon": "logo128.png"
   },
   "permissions" : [
     "scripting"
