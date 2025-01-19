@@ -4,9 +4,5 @@ chrome.action.onClicked.addListener(tab => {
         func: () => {
             alert('You"ve completed your assignment!')
         }
-
     })
-
-}
-
-)
+})
