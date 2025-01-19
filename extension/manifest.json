@@ -4,22 +4,20 @@
   "version": "1.0",
   "manifest_version": 3,
   "icons": {
-    "128": "logo128.png"
+    "128" : "logo128.png"
   },
-  "background": {
-    "service-worker": "service-worker.js",
-    "type": "module"
+  "background" : {
+    "service-worker" : "service-worker.js",
+    "type" : "module"
   },
   "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "128": "logo128.png"
-    }
+    "default_icon": "logo128.png",
+    "default_title": "Tidy Task"
   },
-  "permissions": [
+  "permissions" : [
     "scripting"
   ],
-  "host_permissions": [
+  "host_permissions" : [
     "http://*/*",
     "https://*/*"
   ]
