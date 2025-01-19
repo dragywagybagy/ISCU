@@ -1,5 +1,5 @@
 {
-  "name": "REa lTidy Task",
+  "name": "Tidy Task",
   "description": "Base Level Extension",
   "version": "1.0",
   "manifest_version": 3,
@@ -11,6 +11,7 @@
     "type": "module"
   },
   "action": {
+    "default_popup": "popup.html",
     "default_icon": {
       "128": "logo128.png"
     },
