@@ -1,9 +1,9 @@
 {
-  "name": "Hello Extensions",
+  "name": "Tidy Task",
   "description": "Base Level Extension",
   "version": "1.0",
   "manifest_version": 3,
-  "icon": {
+  "icons": {
     "128" : "logo128.png"
   },
   "background" : {
