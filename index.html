@@ -52,7 +52,7 @@
             border: 1px solid #ccc;
     margin-top: 5px;
     margin-bottom: 5px;
-    margin-right: 5px;
+    margin-right: 1px;
     margin-left: 5px;
     height: 440px;
     display: flex;
@@ -106,13 +106,27 @@
             object-fit: cover; 
         }
 
+        .right-box{
+            margin: 5px;
+            margin-left:1px;
+            border:1px solid #ccc;
+            height: 890px;
+            background: url('https://cdn.discordapp.com/attachments/1322777199735996447/1330597010994237480/IMG_0247.png?ex=678f3748&is=678de5c8&hm=6187e935302f3b35e60e86f19876d6ce691b6c851a2eed04b21c8bb2bf727d48&')
+        }
+
         .bottom-box {
             border: 1px solid #ccc;
             margin: 5px;
+            margin-right: 1px;
             height: 440px;
-            padding-left: 20px;
+            padding-top: 10px;
+            padding-right: 20px;
+            padding-bottom: 20px;
+            padding-left: 20px; 
+            box-sizing: border-box;
             background: url('https://cdn.discordapp.com/attachments/1322777199735996447/1330597010994237480/IMG_0247.png?ex=678f3748&is=678de5c8&hm=6187e935302f3b35e60e86f19876d6ce691b6c851a2eed04b21c8bb2bf727d48&')
         }
+
 
         /* Scroll box styles */
         .scroll-box {
@@ -133,8 +147,10 @@
 
         .scroll-button {
             position: absolute;
-            top: 5  0%;
+            top: 96%;  
             transform: translateY(-50%);
+            margin-left:45%;
+            margin-right:45%;
             background-color: #ccc;
             border: 1px solid #aaa;
             padding: 5px;
@@ -154,7 +170,9 @@
 <body>
 
     <div class="left-section">
-        <!-- Empty section for spacing -->
+        <div class="right-box">
+
+        </div>
     </div>
 
     <div class="right-section">
