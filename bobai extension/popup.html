@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bobai</title>
+    <link rel="stylesheet" href="bulma.min.css"/>
+    <style>
+        .hidden {
+            display: none;
+        }
+        .restricted-tabs-menu {
+            margin-top: 20px;
+        }
+        body, html {
+            height:auto;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container has-text-centered">
+        <h1 class="title has-text-centered">Bobai</h1>
+        <p class="subtitle has-text-centered">Work Optimization Toolkit</p>
+    </div>
+
+    <div class="columns is-multiline m-3">
+        <div class="column is-half">
+            <button id="task-reminder" class="button is-fullwidth is-success">Task Reminder</button>
+        </div>
+        <div class="column is-half">
+            <button id="calculator" class="button is-fullwidth is-success">Calculator</button>
+        </div>
+        <div class="column is-half">
+            <button id="pomodoro-timer" class="button is-fullwidth is-success">Pomodoro Timer</button>
+        </div>
+    </div>
+
+    <div class="container m-5">
+        <div class="field">
+            <label class="label is-large">Lock In Mode</label>
+            <div class="control">
+                <label class="radio">
+                    <input type="radio" name="toggle" value="on" id="lock-in-on">
+                    On
+                </label>
+                <label class="radio">
+                    <input type="radio" name="toggle" value="off" id="lock-in-off">
+                    Off
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="container m-3">
+        <button id="restricted-tabs-btn" class="button">Restricted Tabs</button>
+        <div id="restricted-tabs-menu" class="restricted-tabs-menu hidden">
+            <h2>Restricted Tabs</h2>
+            <ul id="restricted-tabs-list"></ul>
+            <h3>Add New Restricted Tab</h3>
+            <input type="text" id="tab-name" placeholder="Tab Name">
+            <input type="text" id="tab-url" placeholder="Tab URL">
+            <button id="add-tab-btn" class="button">Add Tab</button>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

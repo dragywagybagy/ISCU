@@ -1,0 +1,26 @@
+{
+  "name": "Bobai",
+  "description": "Work Optimization Toolkit",
+  "version": "1.0",
+  "manifest_version": 3,
+  "icons": {
+    "128": "logo.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "alarms",
+    "notifications",
+    "storage"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ]
+}

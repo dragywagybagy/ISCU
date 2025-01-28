@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Timer</title>
+    <link rel="stylesheet" href="bulma.min.css"/>
+    <style>
+        body, html {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        .timer-container {
+            text-align: center;
+            margin-top: 10px;
+            max-width: 300px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .timer-display {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .timer-buttons {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .timer-button {
+            flex: 1;
+            margin: 5px;
+        }
+        .progress {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="timer-container box">
+        <h1 class="title has-text-centered">Bobai</h1>
+        <p class="subtitle has-text-centered">Work Optimization Toolkit</p>
+        <div class="timer-display" id="timer-display">25:00</div>
+        <progress class="progress is-primary" id="progress-bar" value="0" max="100"></progress>
+        <div class="timer-buttons">
+            <button class="button is-primary timer-button" id="start-btn">Start</button>
+            <button class="button is-warning timer-button" id="pause-btn">Pause</button>
+            <button class="button is-light timer-button" id="reset-btn">Reset</button>
+            <button class="button is-light timer-button" id="back-btn">Back</button>
+        </div>
+    </div>
+    <script src="pomodoro-timer.js"></script>
+</body>
+</html>
