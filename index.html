@@ -452,21 +452,22 @@ document.getElementById('toggle-overlay-btn').addEventListener('click', toggleOv
             return (dueDatePriority + weightPriority) / 2; // return average priority
         }
 
-        // Update the course list and assignment data (Idk whats going here ima be honest it was mostly my friend and gpt :'))
+        // Update the course list and assignment data (Idk whats going here ima be honest it was mostly a combined effort and gpt :'), actually 'I' got it >;))
         function updateCourseList() {
             const courseList = document.getElementById("course-list");
             const courseSelectAssignment = document.getElementById("select-course-assignment");
             const removeSelect = document.getElementById("remove-select");
-
+ 
             courseList.innerHTML = "";
             courseSelectAssignment.innerHTML = "<option value='' disabled selected>Select Course</option>";
             removeSelect.innerHTML = "<option value='' disabled selected>Select Course or Assignment</option>";
 
             let allAssignments = [];
             courses.forEach((course, courseIndex) => {
-                course.assignments.forEach((assignment) => {
+                course.assignments.forEach((assignment, assignmentIndex) => {
                     allAssignments.push({
                         courseIndex: courseIndex,
+                        assignmentIndex: assignmentIndex,
                         assignmentName: assignment.assignmentName,
                         dueDate: assignment.dueDate,
                         weight: assignment.weight
@@ -474,8 +475,8 @@ document.getElementById('toggle-overlay-btn').addEventListener('click', toggleOv
                 });
             });
 
-            allAssignments.forEach((assignment, index) => {
-                assignment.priorityScore = calculatePriority(assignment, allAssignments); // calculate each assignment's priority
+            allAssignments.forEach((assignment) => {
+                assignment.priorityScore = calculatePriority(assignment, allAssignments);
             });
 
             const totalPriority = allAssignments.reduce((sum, assignment) => sum + assignment.priorityScore, 0);
@@ -496,10 +497,27 @@ document.getElementById('toggle-overlay-btn').addEventListener('click', toggleOv
                 const assignmentList = document.createElement("ul");
                 assignmentList.classList.add("assignment-list");
 
-                course.assignments.forEach((assignment) => {
+                course.assignments.forEach((assignment, assignmentIndex) => {
                     const assignmentItem = document.createElement("li");
+                    assignmentItem.style.display = "flex";
+                    assignmentItem.style.alignItems = "center";
+                    assignmentItem.style.gap = "10px";
+
+                    // Checkbox
+                    const checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    checkbox.addEventListener("change", function () {
+                        if (this.checked) {
+                            removeAssignment(courseIndex, assignmentIndex);
+                        }
+                    });
+
                     const assignmentPriority = allAssignments.find(a => a.courseIndex === courseIndex && a.assignmentName === assignment.assignmentName).priorityPercentage;
-                    assignmentItem.textContent = `${assignment.assignmentName} - Due: ${assignment.dueDate} - Priority: ${Math.round(assignmentPriority)}%`;
+                    const assignmentText = document.createElement("span");
+                    assignmentText.textContent = `${assignment.assignmentName} - Due: ${assignment.dueDate} - Priority: ${Math.round(assignmentPriority)}%`;
+
+                    assignmentItem.appendChild(checkbox);
+                    assignmentItem.appendChild(assignmentText);
                     assignmentList.appendChild(assignmentItem);
                 });
 
@@ -523,6 +541,13 @@ document.getElementById('toggle-overlay-btn').addEventListener('click', toggleOv
                     removeSelect.appendChild(assignmentOption);
                 });
             });
+        }
+
+        // Function to remove an assignment when checked (Does not correlate with the remove assignment below)
+        function removeAssignment(courseIndex, assignmentIndex) {
+            courses[courseIndex].assignments.splice(assignmentIndex, 1);
+            saveCourses();
+            updateCourseList();
         }
 
         // Add a new course
