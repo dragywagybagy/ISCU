@@ -20,6 +20,59 @@
             z-index: 1000; 
         }
 
+        .shop {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .shop h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .shop-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .shop-item button {
+            padding: 5px 10px;
+            background-color: gold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .shop-item button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .gold-display {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            background-color: gold;
+            color: black;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            border: 1px solid #aaa;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+
         .hidden {
             display: none;
         }
@@ -185,6 +238,12 @@
 </head>
 <body>
 
+    <div class="gold-display" id="gold-display">
+        Gold: <span id="gold-value">500</span>
+    </div>
+
+
+
     <img 
     id="fullscreen-image" 
     src="https://media.discordapp.net/attachments/1322777199735996447/1330951825523867791/Avatar_Background.gif?ex=678fd8fb&is=678e877b&hm=49560d3bd7c1f995ea31756fb0420d864da0e5bfc7d14b424fc55bd429346caa&" 
@@ -192,7 +251,13 @@
 
     <div class="left-section">
         <div class="right-box">
-
+            <div class="shop">
+                <h2>Shop</h2>
+                <div class="shop-item">
+                    <span>Special Overlay - 200 Gold</span>
+                    <button id="buy-overlay-btn">Buy</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -208,11 +273,21 @@
                     alt="New Overlay Image" 
                     class="overlay-image">
                 <!-- Move the button into the top-box -->
+                <div class="top-left-box" id="top-left-box">
+                    <!-- Default or overlay image -->
+                    <img 
+                        src="https://cdn.discordapp.com/attachments/1322777199735996447/1333942364888236082/IMG_1869.png?ex=679aba23&is=679968a3&hm=722ca551d5c086e68bb14475fae614fd280bf4cb543c2646cb9b099ad3abc5e8&" 
+                        alt="Default Image" 
+                        class="overlay-image" 
+                        id="overlay-image"
+                    >
+                </div>
                 <div class="overlay-toggle-container">
                     <button id="toggle-overlay-btn">Switch Avatar</button>
                 </div>
             </div>
         </div>
+        
 
         <div class="bottom-box">
             <font color="#FFFFFF">
@@ -268,7 +343,38 @@
         </div>
     </div>
 
+
     <script> //i tried here but ima be honest like 30% of this is probably indirectly chatgpt :')
+
+let gold = 500; // Initial gold amount
+        let isOverlayPurchased = false; // Tracks if the overlay has been purchased
+
+        // Function to update the displayed gold value
+        function updateGoldDisplay() {
+            document.getElementById('gold-value').textContent = gold;
+        }
+
+        // Function to modify the gold amount
+        function modifyGold(amount) {
+            gold += amount;
+            updateGoldDisplay();
+        }
+
+        // Event listener for the "Buy" button
+        document.getElementById('buy-overlay-btn').addEventListener('click', function () {
+            if (gold >= 200 && !isOverlayPurchased) {
+                modifyGold(-200); // Deduct gold
+                document.getElementById('buy-overlay-btn').disabled = true; // Disable button after purchase
+                isOverlayPurchased = true; // Mark as purchased
+
+                // Change the overlay image to the purchased one
+                document.getElementById('overlay-image').src = 'https://cdn.discordapp.com/attachments/1322777199735996447/1333934483463733320/GoZz0Us_-_Imgur.png?ex=679ab2cc&is=6799614c&hm=5c56daf7cc7f3d4576b0bb92cabc48787d85afafdf6820164f4bfc4b321c73e6&';
+            } else if (gold < 200) {
+                alert('Not enough gold!');
+            }
+        });
+
+        updateGoldDisplay();
 
   
         const image = document.getElementById('fullscreen-image');
@@ -285,7 +391,7 @@ function toggleOverlayImage() {
     const overlayImage = document.querySelector('.overlay-image');
 
     if (isOverlayImage1Visible) {
-        overlayImage.src = 'https://cdn.discordapp.com/attachments/1322777199735996447/1330570397594161162/IMG_0246.png?ex=678e75bf&is=678d243f&hm=8af527ce025bdfcbd8d7cd39e029a5655478cb224efbc8ddd72955aef8a4308d&'; // Replace with your second image path
+        overlayImage.src = 'https://cdn.discordapp.com/attachments/1322777199735996447/1330570397594161162/IMG_0246.png?ex=678e75bf&is=678d243f&hm=8af527ce025bdfcbd8d7cd39e029a5655478cb224efbc8ddd72955aef8a4308d&';
     } else {
         overlayImage.src = 'https://cdn.discordapp.com/attachments/1322777199735996447/1330570397082718260/IMG_0245.png?ex=678e75bf&is=678d243f&hm=0de98b6c3a892acb3348519d6d7fd0084c82524d917394bb6dfedbe92e73d7ae&'; // First overlay image
     }
